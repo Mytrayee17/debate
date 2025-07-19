@@ -1,8 +1,8 @@
-# AI-Powered Debate Learning Platform
+# Debate Mastery App
 
 A comprehensive platform for learning and practicing debate skills with real-time AI feedback, voice coaching, and gamified challenges.
 
-## Features
+## 🚀 Features
 
 ### 🎓 Learning Path
 - **Structured Modules**: Progressive learning from basics to advanced techniques
@@ -18,6 +18,63 @@ A comprehensive platform for learning and practicing debate skills with real-tim
 
 ### 🏆 Gamification
 - **XP System**: Earn experience points for completing activities
+- **Achievements**: Unlock badges and rewards for progress
+- **Leaderboards**: Compete with other users
+
+## 🛠️ Technologies Used
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS, Radix UI
+- **AI Integration**: Google Gemini, OpenAI
+- **Voice Processing**: Web Speech API
+- **State Management**: Zustand
+- **Deployment**: Netlify
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ (LTS recommended)
+- npm or pnpm
+- Git
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/debate-mastery-app.git
+   cd debate-mastery-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   pnpm install
+   ```
+
+3. Create a `.env.local` file in the root directory and add your environment variables:
+   ```env
+   NEXT_PUBLIC_OPENAI_API_KEY=your_openai_api_key
+   NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   pnpm dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+### Available Scripts
+
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application for production
+- `npm start` - Start the production server
+- `npm run lint` - Run ESLint
+- `npm run lint:fix` - Fix ESLint issues
 - **Achievements**: Unlock badges for milestones and challenges
 - **Leaderboards**: Compete with other learners globally
 - **Daily Challenges**: Keep engagement high with fresh content
