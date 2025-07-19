@@ -1,0 +1,114 @@
+# Product Requirements Document (PRD)
+
+## 1. Executive Summary
+
+**Project Name:** DebateXplorer (working title)
+**Track:** A – Debate Learning & Practice
+**Objective:** Build an AI‑powered, gamified platform that guides school and college students through the fundamentals of debating via interactive lessons, live voice debates, and video analysis.
+
+## 2. Problem Statement
+
+Many students find debating intimidating due to unfamiliar structures, lack of feedback, and limited practice opportunities. Traditional coaching is resource‑intensive.
+
+## 3. Goals & Success Metrics
+
+| Goal                  | Metric                         | Target                   |
+| --------------------- | ------------------------------ | ------------------------ |
+| Increase engagement   | DAU/MAU                        | 20% monthly growth       |
+| Improve debate skills | Pre/post test score delta      | +30% average improvement |
+| Retention             | 1‑month retention rate         | ≥ 50%                    |
+| Task completion       | Avg. modules completed/student | ≥ 5 modules/month        |
+
+## 4. Key Features
+
+### 4.1 Gamified Learning Modules
+
+* Interactive lessons on AP, BP, WS formats
+* Quizzes: term definitions, case structuring
+* Badge & XP system for module completion
+
+### 4.2 Progression Levels
+
+* Tiered curriculum: Novice → Intermediate → Advanced
+* Unlockable challenges, custom motions per level
+
+### 4.3 Real‑Time Voice Debate
+
+* Random topic generator
+* User speaks via mic, AI opponent responds via TTS
+* Live transcript & POI prompts
+* In‑flight feedback (off‑topic, missing impact, fallacies)
+
+### 4.4 Video Analysis Section
+
+* Live camera feed during practice
+* Non‑verbal cues: eye contact, posture, gestures
+* Automated coaching tips based on video & transcript
+
+### 4.5 Feedback & Analytics
+
+* Matter/Manner/Method scoring via LLM Agents
+* Structured feedback: diagnosis + suggestion
+* Progress dashboard: strengths, weaknesses heatmap
+
+### 4.6 Tournament Mode
+
+* Bracket creation (single/double elimination)
+* Real‑time tabbing dashboard
+* Spectator & coach view
+
+### 4.7 Teacher Dashboard
+
+* Class roster, student metrics (XP, badges)
+* Assignment distribution & due dates
+* Downloadable session reports (CSV/PDF)
+
+## 5. Functional Requirements
+
+1. **User Authentication & Roles**: Student, Teacher, Admin
+2. **Lesson Management**: CMS for lesson creation/editing
+3. **Audio Streaming & STT**: Whisper or equivalent
+4. **AI Hub**: GPT‑4 Agents for feedback & opponent points
+5. **Video Processing**: MediaPipe/WebAssembly integration
+6. **Database**: PostgreSQL + Redis for state & caching
+7. **WebSocket Backend**: Real‑time transcript & feedback channels
+8. **Mobile App**: React Native implementation
+
+## 6. Non‑Functional Requirements
+
+* **Scalability:** Support 5k concurrent users
+* **Performance:** <500 ms feedback latency
+* **Security:** JWT auth, RLS on database, secure key storage
+* **Accessibility:** WCAG 2.1 AA compliance
+* **Availability:** 99.9% uptime SLA
+
+## 7. Technical Architecture
+
+(Refer to system diagrams in Tech Design Document)
+
+## 8. Milestones & Timeline
+
+| Phase   | Deliverables                         | Timeline  |
+| ------- | ------------------------------------ | --------- |
+| Phase 1 | Voice debate MVP, basic gamification | Month 1–2 |
+| Phase 2 | Teacher dashboard, tournament mode   | Month 3–4 |
+| Phase 3 | Video analysis, mobile app           | Month 5–6 |
+| Phase 4 | Production hardening & rollout       | Month 7   |
+
+## 9. Dependencies
+
+* OpenAI API & usage quotas
+* Supabase or equivalent database provisioning
+* MediaPipe licensing (if any)
+
+## 10. Risks & Mitigations
+
+* **Latency issues**: optimize streaming, edge deployment
+* **AI feedback accuracy**: iterative fine‑tuning, human‑in‑loop
+* **Adoption challenges**: pilot with partner schools
+
+## 11. Appendix
+
+* Glossary of debate formats
+* User personas
+* Sample motions database schema
