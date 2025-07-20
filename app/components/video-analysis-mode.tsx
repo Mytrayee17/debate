@@ -869,14 +869,26 @@ export function VideoAnalysisMode() {
       setCameraError("")
       setCurrentAction("Accessing camera...")
       
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: 'user'
-        },
-        audio: false
-      })
+      // Try to get the best camera stream without zooming
+      let stream
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 1280, max: 1920 },
+            height: { ideal: 720, max: 1080 },
+            facingMode: 'user',
+            aspectRatio: { ideal: 16/9 }
+          },
+          audio: false
+        })
+      } catch (constraintError) {
+        // Fallback to basic constraints if advanced ones fail
+        console.log('Advanced constraints failed, trying basic constraints...')
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false
+        })
+      }
       
       streamRef.current = stream
       setVideoEnabled(true)
@@ -892,10 +904,9 @@ export function VideoAnalysisMode() {
         eyeContact: { percentage: 50, deviations: 0, avgDuration: 0 },
         posture: { score: 70, slouching: 0, leaning: 0 },
         gestures: { frequency: 2, openGestures: 0, closedGestures: 0 },
-        engagement: { score: 75, energyLevel: 70, confidence: 70 },
+        engagement: { score: 75, energyLevel: 70, confidence: 70 }
       })
     } catch (error) {
-      console.error('Error accessing camera:', error)
       setCameraError('Could not access camera. Please check camera permissions and try again.')
       setCurrentAction("")
     }
@@ -1111,7 +1122,7 @@ export function VideoAnalysisMode() {
                     autoPlay
                     playsInline
                     muted
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     style={{ transform: 'scaleX(-1)' }} // Mirror the video
                   />
                 ) : (
