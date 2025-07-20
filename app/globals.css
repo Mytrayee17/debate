@@ -101,4 +101,31 @@ body {
   height: 100% !important;
   max-width: 100% !important;
   max-height: 100% !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  aspect-ratio: auto !important;
+  transform-origin: center !important;
+  scale: 1 !important;
+  zoom: 1 !important;
+}
+
+/* Force video container to not crop */
+.video-container {
+  overflow: visible !important;
+  object-fit: contain !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Additional video element overrides */
+video.video-no-zoom {
+  object-fit: contain !important;
+  object-position: center !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
 }

@@ -869,14 +869,38 @@ export function VideoAnalysisMode() {
     return { total: Math.max(0, Math.min(100, totalScore)) }
   }
 
+  // Check camera capabilities for debugging
+  const checkCameraCapabilities = async () => {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices()
+      const videoDevices = devices.filter(device => device.kind === 'videoinput')
+      console.log('Available video devices:', videoDevices)
+      
+      if (videoDevices.length > 0) {
+        const capabilities = await navigator.mediaDevices.getUserMedia({ video: true })
+        const track = capabilities.getVideoTracks()[0]
+        const settings = track.getSettings()
+        const capabilities_obj = track.getCapabilities()
+        console.log('Current camera settings:', settings)
+        console.log('Camera capabilities:', capabilities_obj)
+      }
+    } catch (error) {
+      console.error('Error checking camera capabilities:', error)
+    }
+  }
+
   const startVideoAnalysis = async () => {
     try {
       setCameraError("")
       setCurrentAction("Accessing camera...")
       
+      // Check camera capabilities for debugging
+      await checkCameraCapabilities()
+      
       // Try to get the best camera stream without zooming
       let stream
       try {
+        // First try with very specific constraints to prevent zooming
         stream = await navigator.mediaDevices.getUserMedia({
           video: {
             width: { ideal: 1280, max: 1920 },
@@ -888,16 +912,25 @@ export function VideoAnalysisMode() {
           audio: false
         })
       } catch (constraintError) {
-        // Fallback to basic constraints if advanced ones fail
         console.log('Advanced constraints failed, trying basic constraints...')
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: 640 },
-            height: { ideal: 480 },
-            facingMode: 'user'
-          },
-          audio: false
-        })
+        try {
+          // Fallback to basic constraints
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              width: { ideal: 640, max: 1280 },
+              height: { ideal: 480, max: 720 },
+              facingMode: 'user'
+            },
+            audio: false
+          })
+        } catch (basicError) {
+          // Final fallback to any camera
+          console.log('Basic constraints failed, trying any camera...')
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+          })
+        }
       }
       
       streamRef.current = stream
@@ -1051,13 +1084,23 @@ export function VideoAnalysisMode() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {!isRecording ? (
-                  <Button
-                    onClick={startVideoAnalysis}
-                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
-                  >
-                    <Play className="w-4 h-4" />
-                    Start Analysis
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={startVideoAnalysis}
+                      disabled={isRecording}
+                      className="flex-1"
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      Start Analysis
+                    </Button>
+                    <Button 
+                      onClick={checkCameraCapabilities}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Test Camera
+                    </Button>
+                  </div>
                 ) : (
                   <div className="flex items-center gap-2">
                     <Button
@@ -1125,7 +1168,7 @@ export function VideoAnalysisMode() {
               <CardTitle>Live Video Feed</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
+              <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden video-container">
                 {videoEnabled ? (
                   <video
                     ref={videoRef}
