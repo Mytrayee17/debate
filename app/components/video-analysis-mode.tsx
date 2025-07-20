@@ -859,7 +859,8 @@ export function VideoAnalysisMode() {
               )}
               <canvas
                 ref={canvasRef}
-                className="absolute inset-0 pointer-events-none"
+                className="absolute inset-0 pointer-events-none opacity-0"
+                style={{ display: 'none' }}
               />
             </div>
           </CardContent>

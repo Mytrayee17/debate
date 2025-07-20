@@ -7,12 +7,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { BookOpen, Target, Shield, Brain, Zap, Play, CheckCircle, Lock, Clock, Users } from "lucide-react"
+import {
+  BookOpen,
+  Target,
+  Users,
+  Play,
+  Lock,
+  CheckCircle,
+  Clock,
+  Brain,
+  MessageSquare,
+  AlertTriangle,
+  Zap,
+  Award,
+} from "lucide-react"
 import { InteractiveLesson } from "./interactive-lesson"
 import LearnAIChat from "./learn-ai-chat";
 
+type ModuleId = "fundamentals" | "argumentation" | "rebuttals" | "fallacies" | "advanced"
+
 interface LearningModule {
-  id: string
+  id: ModuleId
   title: string
   description: string
   difficulty: "Beginner" | "Intermediate" | "Advanced"
@@ -27,8 +42,8 @@ interface LearningModule {
 }
 
 export function LearningPath() {
-  const [selectedModule, setSelectedModule] = useState<string | null>(null)
-  const [showModuleDetails, setShowModuleDetails] = useState<string | null>(null)
+  const [selectedModule, setSelectedModule] = useState<ModuleId | null>(null)
+  const [showModuleDetails, setShowModuleDetails] = useState<ModuleId | null>(null)
 
   const modules: LearningModule[] = [
     {
@@ -52,7 +67,7 @@ export function LearningPath() {
       ],
     },
     {
-      id: "arguments",
+      id: "argumentation",
       title: "Building Strong Arguments",
       description: "Learn to construct compelling, evidence-based arguments using proven frameworks",
       difficulty: "Beginner",
@@ -157,14 +172,14 @@ export function LearningPath() {
     }
   }
 
-  const handleStartModule = (moduleId: string) => {
+  const handleStartModule = (moduleId: ModuleId) => {
     const module = modules.find((m) => m.id === moduleId)
     if (module && !module.locked) {
       setSelectedModule(moduleId)
     }
   }
 
-  const handleShowDetails = (moduleId: string) => {
+  const handleShowDetails = (moduleId: ModuleId) => {
     setShowModuleDetails(showModuleDetails === moduleId ? null : moduleId)
   }
 
