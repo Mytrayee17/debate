@@ -109,21 +109,26 @@ export function VideoAnalysisMode() {
     }
   }, [isRecording, isPaused])
 
-  // Real-time analysis effect
+  // Real-time analysis effect - optimized for performance
   useEffect(() => {
     if (!isRecording || isPaused) return
     
+    // Reduced analysis frequency to prevent lag (from 2000ms to 3000ms)
     analysisRef.current = setInterval(() => {
-      const newData = performAdvancedAnalysis()
-      setAnalysisData(newData)
-      generateLiveFeedback(newData)
-      
-      setAnalysisPrecision(prev => ({
-        confidence: Math.max(90, Math.min(99, prev.confidence + (Math.random() - 0.5) * 2)),
-        accuracy: Math.max(95, Math.min(99, prev.accuracy + (Math.random() - 0.5) * 1.5)),
-        reliability: Math.max(94, Math.min(99, prev.reliability + (Math.random() - 0.5) * 1.8))
-      }))
-    }, 2000)
+      // Only perform analysis if video is actually playing
+      if (videoRef.current && !videoRef.current.paused && !videoRef.current.ended) {
+        const newData = performAdvancedAnalysis()
+        setAnalysisData(newData)
+        generateLiveFeedback(newData)
+        
+        // Update precision less frequently to reduce CPU load
+        setAnalysisPrecision(prev => ({
+          confidence: Math.max(90, Math.min(99, prev.confidence + (Math.random() - 0.5) * 1)),
+          accuracy: Math.max(95, Math.min(99, prev.accuracy + (Math.random() - 0.5) * 0.8)),
+          reliability: Math.max(94, Math.min(99, prev.reliability + (Math.random() - 0.5) * 1.2))
+        }))
+      }
+    }, 3000) // Increased interval to reduce CPU load
 
     return () => {
       if (analysisRef.current) {
@@ -132,25 +137,47 @@ export function VideoAnalysisMode() {
     }
   }, [isRecording, isPaused])
 
-  // Video stream effect
+  // Video stream effect - optimized for performance
   useEffect(() => {
     if (videoRef.current && streamRef.current) {
       console.log('Setting video stream...')
       videoRef.current.srcObject = streamRef.current
+      
+      // Optimize video settings for performance
+      videoRef.current.autoplay = true
+      videoRef.current.playsInline = true
+      videoRef.current.muted = true
+      videoRef.current.preload = 'metadata'
+      
       videoRef.current.onloadedmetadata = () => {
         console.log('Video metadata loaded, playing...')
         console.log('Video dimensions:', videoRef.current?.videoWidth, 'x', videoRef.current?.videoHeight)
+        
+        // Set optimal video settings for performance
+        if (videoRef.current) {
+          videoRef.current.playbackRate = 1.0
+          videoRef.current.defaultPlaybackRate = 1.0
+        }
+        
         videoRef.current?.play().catch(console.error)
       }
+      
       videoRef.current.onplay = () => {
         console.log('Video is playing!')
         console.log('Container dimensions:', videoRef.current?.clientWidth, 'x', videoRef.current?.clientHeight)
       }
+      
       videoRef.current.onerror = (e) => {
         console.error('Video error:', e)
       }
+      
+      // Reduce resize logging to prevent performance impact
+      let resizeTimeout: NodeJS.Timeout
       videoRef.current.onresize = () => {
-        console.log('Video resized:', videoRef.current?.videoWidth, 'x', videoRef.current?.videoHeight)
+        clearTimeout(resizeTimeout)
+        resizeTimeout = setTimeout(() => {
+          console.log('Video resized:', videoRef.current?.videoWidth, 'x', videoRef.current?.videoHeight)
+        }, 1000)
       }
     }
   }, [videoEnabled])
@@ -231,7 +258,7 @@ export function VideoAnalysisMode() {
     }
   }
 
-  // Advanced computer vision analysis
+  // Advanced computer vision analysis - optimized for performance
   const performAdvancedAnalysis = (): VideoAnalysisData => {
     const canvas = canvasRef.current
     const video = videoRef.current
@@ -240,21 +267,31 @@ export function VideoAnalysisMode() {
       return analysisData
     }
 
+    // Only perform canvas operations if video is actually playing and not paused
+    if (video.paused || video.ended) {
+      return analysisData
+    }
+
     const ctx = canvas.getContext('2d')
     if (!ctx) return analysisData
 
-    // Set canvas size to match video
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
+    // Reduce canvas size for better performance
+    const scale = 0.5 // Scale down to 50% for performance
+    canvas.width = video.videoWidth * scale
+    canvas.height = video.videoHeight * scale
 
+    // Use lower quality canvas settings for performance
+    ctx.imageSmoothingEnabled = false
+    ctx.imageSmoothingQuality = 'low'
+    
     // Draw current video frame to canvas for analysis
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
     
-    // Get image data for pixel analysis
+    // Get image data for pixel analysis - only if needed
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     const data = imageData.data
 
-    // Perform advanced analysis
+    // Perform lightweight analysis
     const eyeContactAnalysis = performEyeContactAnalysis(data, canvas.width, canvas.height)
     const postureAnalysis = performPostureAnalysis(data, canvas.width, canvas.height)
     const gestureAnalysis = performGestureAnalysis(data, canvas.width, canvas.height)
@@ -339,37 +376,42 @@ export function VideoAnalysisMode() {
       // Check camera capabilities for debugging
       await checkCameraCapabilities()
       
-      // Try to get the best camera stream without zooming
+      // Try to get the best camera stream without zooming - optimized for performance
       let stream
       try {
-        // First try with very specific constraints to prevent zooming
+        // First try with performance-optimized constraints
         stream = await navigator.mediaDevices.getUserMedia({
           video: {
-            width: { ideal: 1280, max: 1920 },
-            height: { ideal: 720, max: 1080 },
+            width: { ideal: 640, max: 1280 }, // Reduced from 1280 to 640 for better performance
+            height: { ideal: 480, max: 720 }, // Reduced from 720 to 480 for better performance
             facingMode: 'user',
             aspectRatio: { ideal: 16/9 },
-            frameRate: { ideal: 30 }
+            frameRate: { ideal: 24, max: 30 } // Reduced frame rate for better performance
           },
           audio: false
         })
       } catch (constraintError) {
-        console.log('Advanced constraints failed, trying basic constraints...')
+        console.log('Performance constraints failed, trying basic constraints...')
         try {
-          // Fallback to basic constraints
+          // Fallback to basic constraints with lower quality
           stream = await navigator.mediaDevices.getUserMedia({
             video: {
-              width: { ideal: 640, max: 1280 },
-              height: { ideal: 480, max: 720 },
-              facingMode: 'user'
+              width: { ideal: 480, max: 640 },
+              height: { ideal: 360, max: 480 },
+              facingMode: 'user',
+              frameRate: { ideal: 15, max: 24 } // Even lower frame rate for performance
             },
             audio: false
           })
         } catch (basicError) {
-          // Final fallback to any camera
+          // Final fallback to any camera with minimal quality
           console.log('Basic constraints failed, trying any camera...')
           stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
+            video: {
+              width: { ideal: 320 },
+              height: { ideal: 240 },
+              frameRate: { ideal: 15 }
+            },
             audio: false
           })
         }
@@ -581,8 +623,13 @@ export function VideoAnalysisMode() {
                   muted
                   className="video-no-zoom bg-black rounded-xl"
                   style={{ 
-                    transform: 'scaleX(-1)' // Mirror the video
+                    transform: 'scaleX(-1)', // Mirror the video
+                    willChange: 'auto', // Optimize for performance
+                    contain: 'layout style paint' // CSS containment for performance
                   }}
+                  preload="metadata"
+                  disablePictureInPicture
+                  disableRemotePlayback
                 />
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-400">

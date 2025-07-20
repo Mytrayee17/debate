@@ -93,7 +93,7 @@ body {
   }
 }
 
-/* Enhanced video styles to prevent zooming */
+/* Enhanced video styles to prevent zooming and lag */
 .video-no-zoom {
   object-fit: contain !important;
   object-position: center !important;
@@ -108,9 +108,25 @@ body {
   scale: 1 !important;
   zoom: 1 !important;
   border-radius: 0.75rem !important;
+  /* Performance optimizations */
+  will-change: auto !important;
+  contain: layout style paint !important;
+  backface-visibility: hidden !important;
+  perspective: 1000px !important;
+  transform-style: preserve-3d !important;
+  /* Hardware acceleration */
+  -webkit-transform: translateZ(0) !important;
+  -moz-transform: translateZ(0) !important;
+  -ms-transform: translateZ(0) !important;
+  -o-transform: translateZ(0) !important;
+  transform: translateZ(0) !important;
+  /* Reduce repaints */
+  -webkit-backface-visibility: hidden !important;
+  -moz-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
 }
 
-/* Force video container to not crop */
+/* Force video container to not crop and optimize performance */
 .video-container {
   overflow: visible !important;
   object-fit: contain !important;
@@ -119,9 +135,18 @@ body {
   justify-content: center !important;
   border-radius: 0.75rem !important;
   background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+  /* Performance optimizations */
+  will-change: auto !important;
+  contain: layout style paint !important;
+  /* Hardware acceleration */
+  -webkit-transform: translateZ(0) !important;
+  -moz-transform: translateZ(0) !important;
+  -ms-transform: translateZ(0) !important;
+  -o-transform: translateZ(0) !important;
+  transform: translateZ(0) !important;
 }
 
-/* Additional video element overrides */
+/* Additional video element overrides with performance optimizations */
 video.video-no-zoom {
   object-fit: contain !important;
   object-position: center !important;
@@ -132,6 +157,20 @@ video.video-no-zoom {
   min-width: 0 !important;
   min-height: 0 !important;
   border-radius: 0.75rem !important;
+  /* Performance optimizations */
+  will-change: auto !important;
+  contain: layout style paint !important;
+  backface-visibility: hidden !important;
+  /* Hardware acceleration */
+  -webkit-transform: translateZ(0) !important;
+  -moz-transform: translateZ(0) !important;
+  -ms-transform: translateZ(0) !important;
+  -o-transform: translateZ(0) !important;
+  transform: translateZ(0) !important;
+  /* Reduce repaints */
+  -webkit-backface-visibility: hidden !important;
+  -moz-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
 }
 
 /* Enhanced UI components */
