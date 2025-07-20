@@ -92,3 +92,13 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom video styles to prevent zooming */
+.video-no-zoom {
+  object-fit: contain !important;
+  object-position: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}

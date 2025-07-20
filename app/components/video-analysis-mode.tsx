@@ -105,13 +105,18 @@ export function VideoAnalysisMode() {
       videoRef.current.srcObject = streamRef.current
       videoRef.current.onloadedmetadata = () => {
         console.log('Video metadata loaded, playing...')
+        console.log('Video dimensions:', videoRef.current?.videoWidth, 'x', videoRef.current?.videoHeight)
         videoRef.current?.play().catch(console.error)
       }
       videoRef.current.onplay = () => {
         console.log('Video is playing!')
+        console.log('Container dimensions:', videoRef.current?.clientWidth, 'x', videoRef.current?.clientHeight)
       }
       videoRef.current.onerror = (e) => {
         console.error('Video error:', e)
+      }
+      videoRef.current.onresize = () => {
+        console.log('Video resized:', videoRef.current?.videoWidth, 'x', videoRef.current?.videoHeight)
       }
     }
   }, [videoEnabled])
@@ -877,7 +882,8 @@ export function VideoAnalysisMode() {
             width: { ideal: 1280, max: 1920 },
             height: { ideal: 720, max: 1080 },
             facingMode: 'user',
-            aspectRatio: { ideal: 16/9 }
+            aspectRatio: { ideal: 16/9 },
+            frameRate: { ideal: 30 }
           },
           audio: false
         })
@@ -885,7 +891,11 @@ export function VideoAnalysisMode() {
         // Fallback to basic constraints if advanced ones fail
         console.log('Advanced constraints failed, trying basic constraints...')
         stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+          video: {
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: 'user'
+          },
           audio: false
         })
       }
@@ -1122,8 +1132,10 @@ export function VideoAnalysisMode() {
                     autoPlay
                     playsInline
                     muted
-                    className="w-full h-full object-contain"
-                    style={{ transform: 'scaleX(-1)' }} // Mirror the video
+                    className="video-no-zoom bg-black"
+                    style={{ 
+                      transform: 'scaleX(-1)' // Mirror the video
+                    }}
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full text-gray-400">
