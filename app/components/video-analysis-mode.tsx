@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -28,7 +28,6 @@ import {
   Sparkles
 } from 'lucide-react'
 import { useGamificationStore } from '../../hooks/use-gamification-store';
-import { useRouter } from 'next/navigation';
 
 interface VideoAnalysisData {
   eyeContact: {
@@ -64,6 +63,9 @@ interface VideoFeedback {
 }
 
 export function VideoAnalysisMode() {
+  const { addPoints, addBadge } = useGamificationStore()
+  
+  // State
   const [isRecording, setIsRecording] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const [videoEnabled, setVideoEnabled] = useState(false)
@@ -73,6 +75,7 @@ export function VideoAnalysisMode() {
   const [feedback, setFeedback] = useState<VideoFeedback[]>([])
   const [sessionStats, setSessionStats] = useState({ totalFeedback: 0, improvements: 0, warnings: 0 })
   
+  // Refs
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -502,9 +505,21 @@ export function VideoAnalysisMode() {
   }
 
   const handleSessionComplete = () => {
-    // Handle session completion
+    // Handle session completion with gamification
     console.log('Session completed')
     console.log('Session stats:', sessionStats)
+    
+    // Add points based on session performance
+    const sessionPoints = Math.floor(sessionDuration / 10) + Math.floor(analysisData.eyeContact.percentage / 10)
+    addPoints(sessionPoints)
+    
+    // Add badge for completing a session
+    if (sessionDuration > 60) { // More than 1 minute
+      addBadge('Video Analysis Pioneer')
+    }
+    
+    // Show completion message
+    console.log(`Session completed! Earned ${sessionPoints} points`)
   }
 
   return (
