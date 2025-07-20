@@ -20,6 +20,7 @@ import {
   AlertTriangle,
   Zap,
   Award,
+  Shield,
 } from "lucide-react"
 import { InteractiveLesson } from "./interactive-lesson"
 import LearnAIChat from "./learn-ai-chat";
