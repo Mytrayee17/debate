@@ -85,11 +85,6 @@ A comprehensive platform for learning and practicing debate skills with real-tim
 - **Note Preparation**: Structured preparation phase before debates
 - **Performance Analytics**: Track improvement over time
 
-### 👨‍🏫 Teacher Dashboard
-- **Student Progress**: Monitor individual and class performance
-- **Assignment Management**: Create and track debate assignments
-- **Analytics**: Detailed insights into learning patterns
-- **Curriculum Integration**: Align with educational standards
 
 ## Technology Stack
 
